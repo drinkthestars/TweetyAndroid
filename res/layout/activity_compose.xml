@@ -18,19 +18,24 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:onClick="onTweet"
         android:text="Tweet" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/etBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/btCancel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="94dp"
         android:ems="10"
-        android:inputType="textMultiLine" >
-
-        <requestFocus />
-    </EditText>
+        android:gravity="center_vertical"
+        android:hint="Compose"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLength="2000"
+        android:maxLines="4"
+        android:paddingBottom="0dp" />
 
 </RelativeLayout>
