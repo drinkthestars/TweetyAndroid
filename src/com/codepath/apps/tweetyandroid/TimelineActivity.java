@@ -20,27 +20,46 @@ public class TimelineActivity extends Activity {
 	ArrayList<Tweet> tweets;
 	ListView lvTweets;
 	TweetsAdapter adapter;
+	long max_id;
 	
 	public final int REQUEST_CODE = 7;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		getTimeline();
 		
+		tweets = new ArrayList<Tweet>();
+		
+		lvTweets = (ListView) findViewById(R.id.lvTweets);
+		
+		//Scroll Listener
+		lvTweets.setOnScrollListener(new EndlessScrollListener() {
+			@Override
+			public void onLoadMore(int page, int totalItemsCount) {
+				Log.d("DEBUG", "inside onLoadmore");
+				getTimeline();
+			}
+		});
+		
+		getTimeline();
 	}
 
 	public void getTimeline() {
+		if (tweets.isEmpty()) {
+			max_id = 0;
+		} else {
+			max_id = tweets.get(tweets.size() - 1).getId();
+		}
 		//call the app's singleton and get the rest client
-		TwitterClientApp.getRestClient().getHomeTimeline(new JsonHttpResponseHandler(){
+		TwitterClientApp.getRestClient().getHomeTimeline(max_id, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(int arg0, JSONArray jsonArray) {
 				tweets = Tweet.fromJson(jsonArray);
-				lvTweets = (ListView) findViewById(R.id.lvTweets);
-				
 				//new adapter
 				adapter = new TweetsAdapter(getBaseContext(), tweets);
-				
+			
+				Log.d("DEBUG", "API CALL SUCCESS");
 				//set the adapter on the list view
 				lvTweets.setAdapter(adapter);
 			}
@@ -58,22 +77,7 @@ public class TimelineActivity extends Activity {
 		getMenuInflater().inflate(R.menu.timeline, menu);
 		return true;
 	}
-	
-	public void onComposeAction(MenuItem m) {
-		Log.d("DEBUG", "Compose tweet");
-		Intent i = new Intent(this, ComposeActivity.class);
-		// REQUEST_CODE can be any value we like, used to determine the result later
-		startActivityForResult(i, REQUEST_CODE);
-	}
-	
-	public void onRefreshView(MenuItem m) {
-		getTimeline();
-	}
-	
-	public void onTrendsView(MenuItem m) {
-		Log.d("DEBUG", "Clicked on Trends button");
-	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
@@ -88,5 +92,21 @@ public class TimelineActivity extends Activity {
 		Log.d("DEBUG", "Profile View");
 		Intent i = new Intent(this, ProfileActivity.class);
    	 	startActivity(i);
+	}
+	
+	
+	public void onComposeAction(MenuItem m) {
+		Log.d("DEBUG", "Compose tweet");
+		Intent i = new Intent(this, ComposeActivity.class);
+		// REQUEST_CODE can be any value we like, used to determine the result later
+		startActivityForResult(i, REQUEST_CODE);
+	}
+	
+	public void onRefreshView(MenuItem m) {
+		getTimeline();
+	}
+	
+	public void onTrendsView(MenuItem m) {
+		Log.d("DEBUG", "Clicked on Trends button");
 	}
 }

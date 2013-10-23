@@ -1,10 +1,12 @@
 package com.codepath.apps.tweetyandroid.models;
 
+import java.util.ArrayList;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import android.util.Log;
 
 public class Tweet extends BaseModel {
     private User user;
@@ -18,7 +20,7 @@ public class Tweet extends BaseModel {
     }
 
     public long getId() {
-        return getLong("id");
+    	return getLong("id");
     }
 
     public boolean isFavorited() {

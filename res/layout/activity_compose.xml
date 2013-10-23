@@ -31,10 +31,11 @@
         android:layout_below="@+id/btCancel"
         android:layout_marginTop="94dp"
         android:ems="10"
-        android:gravity="center_vertical"
+        android:gravity="top"
         android:hint="Compose"
         android:inputType="textCapSentences|textMultiLine"
         android:maxLength="2000"
+        android:background="@drawable/custom_draw"
         android:maxLines="4"
         android:paddingBottom="0dp" />
 
